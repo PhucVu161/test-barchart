@@ -2,7 +2,6 @@
 
 import { Download, ChartColumn } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -17,8 +16,20 @@ import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 
-export const description = "A stacked bar chart with a legend";
-
+const totals = {
+  totalRevenue: {
+    current: 16614,
+    previous: 15544,
+  },
+  averagePerDay: {
+    current: 2373,
+    previous: 2421,
+  },
+  totalCovers: {
+    current: 933,
+    previous: 852,
+  },
+};
 const chartData = [
   {
     day: "Monday",
@@ -129,24 +140,56 @@ function TotalCart({
   label,
   value,
   isMoney,
+  preChecked,
 }: {
   label: String;
-  value: number;
+  value: { current: number; previous: number };
   isMoney: boolean;
+  preChecked: boolean;
 }) {
   return (
     <div className="bg-[#f8f6f5] rounded-xl p-3 flex-1">
       <div className="text-md font-medium text-gray-600">{label}</div>
-      <div className="text-2xl font-semibold">
+      <span className="text-2xl font-semibold">
         {isMoney
-          ? value.toLocaleString("en-US", {
+          ? value.current.toLocaleString("en-US", {
               style: "currency",
               currency: "USD",
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             })
-          : value}
-      </div>
+          : value.current}
+      </span>
+      {preChecked && (
+        <>
+          <span className="ml-4 text-md font-semibold text-gray-600">
+            vs{" "}
+            {isMoney
+              ? value.previous.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })
+              : value.previous}
+            {value.current - value.previous >= 0 ? (
+              <span className="text-green-600 font-bold">
+                {` (+${(
+                  ((value.current - value.previous) / value.previous) *
+                  100
+                ).toFixed(1)}%)`}
+              </span>
+            ) : (
+              <span className="text-red-600 font-bold">
+                {` (-${(
+                  ((value.previous - value.current) / value.previous) *
+                  100
+                ).toFixed(1)}%)`}
+              </span>
+            )}
+          </span>
+        </>
+      )}
     </div>
   );
 }
@@ -160,9 +203,9 @@ export default function MyChart() {
     <Card className="w-3/4">
       <CardHeader className="">
         {/* Show title and button */}
-        <div className="flex justify-between items-center mb-16">
+        <div className="flex justify-between items-center mb-16 flex-wrap">
           <CardTitle className="text-2xl">This Week's Revenue Trend</CardTitle>
-          <div className="flex space-x-4">
+          <div className="flex gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Checkbox
                 id="pos"
@@ -196,7 +239,11 @@ export default function MyChart() {
                 Costs
               </Label>
             </div>
-            <Button className="rounded-2xl border-2 border-gray-300 text-md" variant={`${preChecked ? "default" : "preBtn"}`} onClick={()=>setPreChecked(!preChecked)}>
+            <Button
+              className="rounded-2xl border-2 border-gray-300 text-md"
+              variant={`${preChecked ? "default" : "preBtn"}`}
+              onClick={() => setPreChecked(!preChecked)}
+            >
               <ChartColumn /> Compare to Previous
             </Button>
             <Button
@@ -209,13 +256,31 @@ export default function MyChart() {
         </div>
         {/* Show total cart */}
         <div className="flex gap-4">
-          <TotalCart label={"Total Revenue"} value={16177} isMoney={true} />
-          <TotalCart label={"Average per Day"} value={2311} isMoney={true} />
-          <TotalCart label={"Total Covers"} value={904} isMoney={false} />
+          <TotalCart
+            label={"Total Revenue"}
+            value={totals.totalRevenue}
+            isMoney={true}
+            preChecked={preChecked}
+          />
+          <TotalCart
+            label={"Average per Day"}
+            value={totals.averagePerDay}
+            isMoney={true}
+            preChecked={preChecked}
+          />
+          <TotalCart
+            label={"Total Covers"}
+            value={totals.totalCovers}
+            isMoney={false}
+            preChecked={preChecked}
+          />
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={preChecked ? chartPreConfig : chartConfig} className="h-[400px] w-full">
+        <ChartContainer
+          config={preChecked ? chartPreConfig : chartConfig}
+          className="h-[400px] w-full"
+        >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid strokeDasharray="4 2" stroke="#dfdddd" />
             <XAxis
