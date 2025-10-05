@@ -12,19 +12,77 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
+import { Label } from "./ui/label";
 
 export const description = "A stacked bar chart with a legend";
 
 const chartData = [
-  { day: "Monday", posRevenue: 1752, eatclubRevenue: 270, labourCosts: 650 },
-  { day: "Tueday", posRevenue: 1812, eatclubRevenue: 260, labourCosts: 690 },
-  { day: "Wednesday", posRevenue: 1830, eatclubRevenue: 307, labourCosts: 810 },
-  { day: "Thurday", posRevenue: 1890, eatclubRevenue: 283, labourCosts: 680 },
-  { day: "Friday", posRevenue: 1730, eatclubRevenue: 279, labourCosts: 660 },
-  { day: "Saturdady", posRevenue: 2040, eatclubRevenue: 674, labourCosts: 800 },
-  { day: "Sunday", posRevenue: 2440, eatclubRevenue: 474, labourCosts: 1200 },
+  {
+    day: "Monday",
+    posRevenue: 1752,
+    eatclubRevenue: 270,
+    labourCosts: 650,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
+  {
+    day: "Tueday",
+    posRevenue: 1812,
+    eatclubRevenue: 260,
+    labourCosts: 690,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
+  {
+    day: "Wednesday",
+    posRevenue: 1830,
+    eatclubRevenue: 307,
+    labourCosts: 810,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
+  {
+    day: "Thurday",
+    posRevenue: 1890,
+    eatclubRevenue: 283,
+    labourCosts: 680,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
+  {
+    day: "Friday",
+    posRevenue: 1730,
+    eatclubRevenue: 279,
+    labourCosts: 660,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
+  {
+    day: "Saturdady",
+    posRevenue: 2040,
+    eatclubRevenue: 674,
+    labourCosts: 800,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
+  {
+    day: "Sunday",
+    posRevenue: 2440,
+    eatclubRevenue: 474,
+    labourCosts: 1200,
+    posRevenuePre: 1652,
+    eatclubRevenuePre: 263,
+    labourCostsPre: 650,
+  },
 ];
 
 const chartConfig = {
@@ -40,36 +98,94 @@ const chartConfig = {
     label: "Labour Costs",
     color: "var(--labour-cost1)",
   },
+  posRevenuePre: {
+    label: "POS Revenue (Previous)",
+    color: "var(--pos-revenue2)",
+  },
+  eatclubRevenuePre: {
+    label: "Eatclub Revenue (Previous)",
+    color: "var(--eatclub-revenue2)",
+  },
+  labourCostsPre: {
+    label: "Labour Costs (Previous)",
+    color: "var(--labour-cost2)",
+  },
 } satisfies ChartConfig;
-function TotalCart({ label, value, isMoney }: { label: String; value: number; isMoney: boolean }) {
+function TotalCart({
+  label,
+  value,
+  isMoney,
+}: {
+  label: String;
+  value: number;
+  isMoney: boolean;
+}) {
   return (
-    <div className="bg-[#f8f6f5] rounded-xl p-3 w-full">
+    <div className="bg-[#f8f6f5] rounded-xl p-3 flex-1">
       <div className="text-md font-medium text-gray-600">{label}</div>
       <div className="text-2xl font-semibold">
-        {isMoney ? value.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }) : value}
+        {isMoney
+          ? value.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })
+          : value}
       </div>
     </div>
   );
 }
 
 export default function MyChart() {
+  const [posChecked, setPosChecked] = useState(true);
+  const [eatclubChecked, setEatclubChecked] = useState(true);
+  const [labourChecked, setLabourChecked] = useState(true);
   return (
-    <Card className="w-7/10">
+    <Card className="w-3/4">
       <CardHeader className="">
         <div className="flex justify-between items-center mb-16">
           <CardTitle className="text-2xl">This Week's Revenue Trend</CardTitle>
-          <div className="space-x-4">
-            <Button className="rounded-2xl">
+          <div className="flex space-x-4">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="pos"
+                checked={posChecked}
+                onClick={() => setPosChecked(!posChecked)}
+              />
+              <Label htmlFor="pos" className="text-md">
+                <div className="w-[14px] h-[2px] bg-pos-revenue1"></div>POS
+                Revenue
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="eatclub"
+                checked={eatclubChecked}
+                onClick={() => setEatclubChecked(!eatclubChecked)}
+              />
+              <Label htmlFor="eatclub" className="text-md">
+                <div className="w-[14px] h-[2px] bg-eatclub-revenue1"></div>
+                Eatclub Revenue
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="labour"
+                checked={labourChecked}
+                onClick={() => setLabourChecked(!labourChecked)}
+              />
+              <Label htmlFor="labour" className="text-md">
+                <div className="w-[14px] h-[2px] bg-labour-cost1"></div>Labour
+                Costs
+              </Label>
+            </div>
+            <Button className="rounded-2xl text-md">
               <ChartColumn /> Compare to Previous
             </Button>
             <Button
               variant={"secondary"}
-              className="rounded-2xl border-2 border-gray-300"
+              className="rounded-2xl border-2 border-gray-300 text-md"
             >
               <Download /> Export PNG
             </Button>
@@ -107,23 +223,52 @@ export default function MyChart() {
             <ChartLegend
               content={<ChartLegendContent className="text-[16px]" />}
             />
-            <Bar
-              dataKey="posRevenue"
-              stackId="a"
-              fill="var(--color-posRevenue)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="eatclubRevenue"
-              stackId="a"
-              fill="var(--color-eatclubRevenue)"
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              dataKey="labourCosts"
-              fill="var(--color-labourCosts)"
-              radius={4}
-            />
+            {posChecked && (
+              <Bar
+                dataKey="posRevenue"
+                stackId="a"
+                fill="var(--color-posRevenue)"
+                radius={[0, 0, 4, 4]}
+              />
+            )}
+            {eatclubChecked && (
+              <Bar
+                dataKey="eatclubRevenue"
+                stackId="a"
+                fill="var(--color-eatclubRevenue)"
+                radius={[4, 4, 0, 0]}
+              />
+            )}
+            {labourChecked && (
+              <Bar
+                dataKey="labourCosts"
+                fill="var(--color-labourCosts)"
+                radius={4}
+              />
+            )}
+            {posChecked && (
+              <Bar
+                dataKey="posRevenuePre"
+                stackId="b"
+                fill="var(--color-posRevenuePre)"
+                radius={[0, 0, 4, 4]}
+              />
+            )}
+            {eatclubChecked && (
+              <Bar
+                dataKey="eatclubRevenuePre"
+                stackId="b"
+                fill="var(--color-eatclubRevenuePre)"
+                radius={[4, 4, 0, 0]}
+              />
+            )}
+            {labourChecked && (
+              <Bar
+                dataKey="labourCostsPre"
+                fill="var(--color-labourCostsPre)"
+                radius={4}
+              />
+            )}
           </BarChart>
         </ChartContainer>
       </CardContent>
