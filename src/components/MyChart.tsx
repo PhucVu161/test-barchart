@@ -98,6 +98,20 @@ const chartConfig = {
     label: "Labour Costs",
     color: "var(--labour-cost1)",
   },
+} satisfies ChartConfig;
+const chartPreConfig = {
+  posRevenue: {
+    label: "POS Revenue (Current)",
+    color: "var(--pos-revenue1)",
+  },
+  eatclubRevenue: {
+    label: "Eatclub Revenue (Current)",
+    color: "var(--eatclub-revenue1)",
+  },
+  labourCosts: {
+    label: "Labour Costs (Current)",
+    color: "var(--labour-cost1)",
+  },
   posRevenuePre: {
     label: "POS Revenue (Previous)",
     color: "var(--pos-revenue2)",
@@ -141,9 +155,11 @@ export default function MyChart() {
   const [posChecked, setPosChecked] = useState(true);
   const [eatclubChecked, setEatclubChecked] = useState(true);
   const [labourChecked, setLabourChecked] = useState(true);
+  const [preChecked, setPreChecked] = useState(true);
   return (
     <Card className="w-3/4">
       <CardHeader className="">
+        {/* Show title and button */}
         <div className="flex justify-between items-center mb-16">
           <CardTitle className="text-2xl">This Week's Revenue Trend</CardTitle>
           <div className="flex space-x-4">
@@ -154,8 +170,8 @@ export default function MyChart() {
                 onClick={() => setPosChecked(!posChecked)}
               />
               <Label htmlFor="pos" className="text-md">
-                <div className="w-[14px] h-[2px] bg-pos-revenue1"></div>POS
-                Revenue
+                <div className="w-[14px] h-[2px] bg-pos-revenue1"></div>
+                POS Revenue
               </Label>
             </div>
             <div className="flex items-center gap-2">
@@ -180,7 +196,7 @@ export default function MyChart() {
                 Costs
               </Label>
             </div>
-            <Button className="rounded-2xl text-md">
+            <Button className="rounded-2xl border-2 border-gray-300 text-md" variant={`${preChecked ? "default" : "preBtn"}`} onClick={()=>setPreChecked(!preChecked)}>
               <ChartColumn /> Compare to Previous
             </Button>
             <Button
@@ -191,6 +207,7 @@ export default function MyChart() {
             </Button>
           </div>
         </div>
+        {/* Show total cart */}
         <div className="flex gap-4">
           <TotalCart label={"Total Revenue"} value={16177} isMoney={true} />
           <TotalCart label={"Average per Day"} value={2311} isMoney={true} />
@@ -198,7 +215,7 @@ export default function MyChart() {
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[400px] w-full">
+        <ChartContainer config={preChecked ? chartPreConfig : chartConfig} className="h-[400px] w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid strokeDasharray="4 2" stroke="#dfdddd" />
             <XAxis
@@ -246,7 +263,7 @@ export default function MyChart() {
                 radius={4}
               />
             )}
-            {posChecked && (
+            {posChecked && preChecked && (
               <Bar
                 dataKey="posRevenuePre"
                 stackId="b"
@@ -254,7 +271,7 @@ export default function MyChart() {
                 radius={[0, 0, 4, 4]}
               />
             )}
-            {eatclubChecked && (
+            {eatclubChecked && preChecked && (
               <Bar
                 dataKey="eatclubRevenuePre"
                 stackId="b"
@@ -262,7 +279,7 @@ export default function MyChart() {
                 radius={[4, 4, 0, 0]}
               />
             )}
-            {labourChecked && (
+            {labourChecked && preChecked && (
               <Bar
                 dataKey="labourCostsPre"
                 fill="var(--color-labourCostsPre)"
