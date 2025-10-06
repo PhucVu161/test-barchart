@@ -203,9 +203,9 @@ export default function MyChart() {
     <Card className="w-3/4">
       <CardHeader className="">
         {/* Show title and button */}
-        <div className="flex justify-between items-center mb-16 flex-wrap">
-          <CardTitle className="text-2xl">{"This Week's Revenue Trend"}</CardTitle>
-          <div className="flex gap-4 flex-wrap">
+        <div className="flex justify-between items-center mb-16">
+          <CardTitle className="text-2xl w-90">{preChecked ? "This Week's Revenue Trend vs Previous Period" : "This Week's Revenue Trend"}</CardTitle>
+          <div className="flex gap-4">
             <div className="flex items-center gap-2">
               <Checkbox
                 id="pos"
