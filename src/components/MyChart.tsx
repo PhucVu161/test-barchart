@@ -11,7 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
@@ -142,7 +142,7 @@ function TotalCart({
   isMoney,
   preChecked,
 }: {
-  label: String;
+  label: string;
   value: { current: number; previous: number };
   isMoney: boolean;
   preChecked: boolean;
@@ -204,7 +204,7 @@ export default function MyChart() {
       <CardHeader className="">
         {/* Show title and button */}
         <div className="flex justify-between items-center mb-16 flex-wrap">
-          <CardTitle className="text-2xl">This Week's Revenue Trend</CardTitle>
+          <CardTitle className="text-2xl">{"This Week's Revenue Trend"}</CardTitle>
           <div className="flex gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Checkbox
