@@ -200,7 +200,7 @@ export default function MyChart() {
   const [labourChecked, setLabourChecked] = useState(true);
   const [preChecked, setPreChecked] = useState(true);
   return (
-    <Card className="w-3/4">
+    <Card className="w-5/6">
       <CardHeader className="">
         {/* Show title and button */}
         <div className="flex justify-between items-center mb-16">
